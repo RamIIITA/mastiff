@@ -125,20 +125,22 @@ class PEInfo(exe.EXECat):
             # http://blog.dkbza.org/2007/02/pefile-parsing-version-information-from.html
             outfile.write('\nFile Information:\n')
             if hasattr(pe, "FileInfo"):
-                for fileinfo in pe.FileInfo:
-                    if fileinfo.Key == 'StringFileInfo':
-                        for string_entry in fileinfo.StringTable:
-                            for entry in string_entry.entries.items():
-                                outfile.write("{0:20}:\t{1:40}\n".format(printable_str(entry[0]), \
-                                                            printable_str(entry[1])))
-                    if fileinfo.Key == 'VarFileInfo':
-                        try:
-                            for var in fileinfo.Var:
-                                outfile.write("{0:20}:\t{1:40}\n".format(printable_str(var.entry.items()[0][0]),
-                                                                         printable_str(var.entry.items()[0][1])))
-                        except:
-                            # there are times when a VarFileInfo structure may be present, but empty
-                            pass
+                for fileinfos in pe.FileInfo:
+                    #Modified code
+                    for fileinfo in fileinfos:
+                        if fileinfo.Key == 'StringFileInfo':
+                            for string_entry in fileinfo.StringTable:
+                                for entry in string_entry.entries.items():
+                                    outfile.write("{0:20}:\t{1:40}\n".format(printable_str(entry[0]), \
+                                                                printable_str(entry[1])))
+                        if fileinfo.Key == 'VarFileInfo':
+                            try:
+                                for var in fileinfo.Var:
+                                    outfile.write("{0:20}:\t{1:40}\n".format(printable_str(var.entry.items()[0][0]),
+                                                                             printable_str(var.entry.items()[0][1])))
+                            except:
+                                # there are times when a VarFileInfo structure may be present, but empty
+                                pass
             else:
                 outfile.write('No file information present.\n')
 
